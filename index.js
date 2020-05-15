@@ -1,12 +1,11 @@
 const express = require("express");
-const app = express();
 const path = require("path");
+const http = require('http');
 
 require('dotenv').config();
 
-app.set("view engine", "ejs");
-app.set("views", "./views");
-app.use("/static", express.static(path.join(__dirname, 'public')));
+const app = express();
+app.use(express.static(path.join(__dirname, 'client')));
 
 // Body-parser
 app.use(express.json());
@@ -22,11 +21,12 @@ mongoose.connect(process.env.CONNECTION_STRING, { useNewUrlParser: true, useUnif
 });
 
 // Routes 
-const home = require("./routes/")
-app.use("/", home);
+const indexRouter = require("./server/routes/index")
+app.use("/api", indexRouter);
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log("Listening on port " + port));
+// app.listen(port, () => console.log("Listening on port " + port));
+http.createServer(app).listen(port, () => console.log("Listening on port " + port));
 
 
 
